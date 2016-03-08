@@ -1,0 +1,44 @@
+{
+  "host": "SERVICENOW_HOST",
+  "protocol": "https",
+  "auth": "AUTH_HASH",
+  "project_prefix" : "PREFIX__",
+  "folders": {
+    "stylesheets": {
+      "table": "content_css",
+      "key": "name",
+      "field": "style",
+      "extension": "css"
+    },
+    "ui_macros": {
+      "table": "sys_ui_macro",
+      "key": "name",
+      "field": "xml",
+      "extension": "xml"
+    },
+    "ui_pages": {
+      "table": "sys_ui_page",
+      "key": "name",
+      "field": "html",
+      "extension": "xhtml"
+    },
+    "ui_scripts": {
+      "table": "sys_ui_script",
+      "key": "name",
+      "field": "script",
+      "extension": "js"
+    },
+    "content_block": {
+      "table": "content_block_programmatic",
+      "key": "name",
+      "field": "programmatic_content",
+      "extension": "xml"
+    },
+    "images": {
+      "table": "db_image",
+      "key": "name",
+      "field": "image",
+      "isImage" : true
+    }
+  }
+}
