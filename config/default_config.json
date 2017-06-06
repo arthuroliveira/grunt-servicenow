@@ -60,6 +60,12 @@
       "key": "id",
       "field": "script",
       "extension": "js"
+    },
+    "ng_template": {
+      "table": "sp_ng_template",
+      "key": "id",
+      "field": "template",
+      "extension": "html"
     }
   }
 }
