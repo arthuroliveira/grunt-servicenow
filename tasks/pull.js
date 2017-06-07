@@ -85,9 +85,10 @@ module.exports = function (grunt) {
                                 file_path;
                             obj.result.forEach(function (element) {
                                 (function () {
+                                    var custom_folder = config.folders[folder_name].folder;
                                     var content = element[config.folders[folder_name].field];
-                                    filename = element.name || element[config.folders[folder_name].key];
-                                    file_path = path.join(folder_name, filename);
+                                    filename = element[config.folders[folder_name].name] || element.name || element[config.folders[folder_name].key];
+                                    file_path = path.join(custom_folder || folder_name, filename);
 
                                     if ('extension' in config.folders[folder_name]) {
                                         file_path = file_path + "." + config.folders[folder_name].extension;
@@ -98,12 +99,15 @@ module.exports = function (grunt) {
                                     hashComparePromises.push(hashComparePromise);
 
                                     hashComparePromise.then(function (hash_same) {
+                                        // console.log(element)
                                         if (hash_same) {
                                             files_to_save[dest] = content;
                                             sync_data[dest] = {
                                                 sys_id: element.sys_id,
                                                 sys_updated_on: element.sys_updated_on,
                                                 sys_updated_by: element.sys_updated_by,
+                                                table: element.sys_class_name,
+                                                field: folder_name,
                                                 hash: hash.hashContent(content)
                                             };
                                         } else {
@@ -112,6 +116,8 @@ module.exports = function (grunt) {
                                                 sys_id: element.sys_id,
                                                 sys_updated_on: element.sys_updated_on,
                                                 sys_updated_by: element.sys_updated_by,
+                                                table: element.sys_class_name,
+                                                field: folder_name,
                                                 hash: hash.hashContent(content)
                                             };
                                         }
@@ -170,6 +176,7 @@ module.exports = function (grunt) {
                                     console.log(' - ' + item);
                                 });
                             });
+                            // console.log(sync_data)
                             syncDataHelper.saveData(sync_data).then(function () {
                                 done();
                             });

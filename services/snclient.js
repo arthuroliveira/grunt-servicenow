@@ -12,7 +12,7 @@ module.exports = restler.service(
             username = parts[0],
             password = parts[1],
             clientOptions = {
-                baseURL:  (config.protocol || "https") +"://" + config.host
+                baseURL: "https://" + config.host
             };
 
         var headers = {

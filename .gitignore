@@ -1,6 +1,5 @@
 node_modules/
 dist/
-.idea/
 .sn-config.json
 .sn-sync_data.json
 npm-debug.log

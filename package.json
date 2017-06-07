@@ -1,6 +1,6 @@
 {
   "name": "grunt-servicenow",
-  "version": "0.5.1",
+  "version": "0.4.9",
   "description": "Grunt tasks used to work with pushing and pullin records to a ServiceNow instance",
   "main": "tasks/index.js",
   "author": "",
