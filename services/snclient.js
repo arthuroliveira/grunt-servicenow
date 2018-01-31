@@ -12,7 +12,7 @@ module.exports = restler.service(
             username = parts[0],
             password = parts[1],
             clientOptions = {
-                baseURL: "https://" + config.host
+                baseURL:  (config.protocol || "https") +"://" + config.host
             };
 
         var headers = {
@@ -129,6 +129,8 @@ module.exports = restler.service(
                 }
 
                 var path = url.format(urlObj);
+
+
 
                 function handleResponse(result, res) {
                     var err = validateResponse(result, res, request);
