@@ -35,7 +35,10 @@ module.exports = function (grunt) {
                                 message: "What record types do you want to pull from?",
                                 choices: Object.keys(config.folders)
 
-                            }, {
+                            }
+                        ];
+                        if (!config.scope) {
+                            questions.push({
                                 type: "input",
                                 name: "prefix",
                                 message: "Please enter a search term to use for finding records",
@@ -43,8 +46,8 @@ module.exports = function (grunt) {
                                 //when : function (answers){
                                 //	return (answers.no_query) ? false : true;
                                 //}
-                            }
-                        ];
+                            })
+                        }
                         inquirer.prompt(questions, function (answers) {
                             if (answers.prefix == config.project_prefix) {
                                 if (config.libs) {
@@ -70,10 +73,19 @@ module.exports = function (grunt) {
                             operator = "=";
                         }
 
-                        var obj = {
-                            table: config.folders[folder_name].table,
-                            query: config.folders[folder_name].key + operator + file_name
-                        };
+
+                        if (config.scope) {
+
+                            var obj = {
+                                table: config.folders[folder_name].table,
+                                query: "sys_package" + "=" + config.scope
+                            };
+                        } else {
+                            var obj = {
+                                table: config.folders[folder_name].table,
+                                query: config.folders[folder_name].key + operator + file_name
+                            };
+                        }
 
                         snService.getRecords(obj, function (err, obj) {
                             var files_to_save = {},
@@ -85,10 +97,9 @@ module.exports = function (grunt) {
                                 file_path;
                             obj.result.forEach(function (element) {
                                 (function () {
-                                    var custom_folder = config.folders[folder_name].folder;
                                     var content = element[config.folders[folder_name].field];
-                                    filename = element[config.folders[folder_name].name] || element.name || element[config.folders[folder_name].key];
-                                    file_path = path.join(custom_folder || folder_name, filename);
+                                    filename = element.name || element[config.folders[folder_name].key];
+                                    file_path = path.join(folder_name, filename);
 
                                     if ('extension' in config.folders[folder_name]) {
                                         file_path = file_path + "." + config.folders[folder_name].extension;
@@ -99,15 +110,12 @@ module.exports = function (grunt) {
                                     hashComparePromises.push(hashComparePromise);
 
                                     hashComparePromise.then(function (hash_same) {
-                                        // console.log(element)
                                         if (hash_same) {
                                             files_to_save[dest] = content;
                                             sync_data[dest] = {
                                                 sys_id: element.sys_id,
                                                 sys_updated_on: element.sys_updated_on,
                                                 sys_updated_by: element.sys_updated_by,
-                                                table: element.sys_class_name,
-                                                field: folder_name,
                                                 hash: hash.hashContent(content)
                                             };
                                         } else {
@@ -116,8 +124,6 @@ module.exports = function (grunt) {
                                                 sys_id: element.sys_id,
                                                 sys_updated_on: element.sys_updated_on,
                                                 sys_updated_by: element.sys_updated_by,
-                                                table: element.sys_class_name,
-                                                field: folder_name,
                                                 hash: hash.hashContent(content)
                                             };
                                         }
@@ -176,7 +182,6 @@ module.exports = function (grunt) {
                                     console.log(' - ' + item);
                                 });
                             });
-                            // console.log(sync_data)
                             syncDataHelper.saveData(sync_data).then(function () {
                                 done();
                             });
