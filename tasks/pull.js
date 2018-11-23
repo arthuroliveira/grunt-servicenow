@@ -73,12 +73,18 @@ module.exports = function (grunt) {
                             operator = "=";
                         }
 
-
                         if (config.scope) {
+
+                            var scopeID;
+                            if (Array.isArray(config.scope)) {
+                                scopeID = config.scope.join(',');
+                            } else {
+                                scopeID = config.scope;
+                            }
 
                             var obj = {
                                 table: config.folders[folder_name].table,
-                                query: "sys_package" + "=" + config.scope
+                                query: "sys_package" + "IN" + scopeID
                             };
                         } else {
                             var obj = {
